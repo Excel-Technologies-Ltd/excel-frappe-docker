@@ -17,10 +17,22 @@ if [[ -z "$REQUEST_ID" ]]; then
   echo "REQUEST_ID set to: $REQUEST_ID"
 fi
 
-if [[ -z "$BACKEND" ]]; then
-  echo "BACKEND defaulting to 0.0.0.0:8000"
-  export BACKEND=0.0.0.0:8000
+if [[ -z "$BACKEND1" ]]; then
+  export BACKEND1="backend1:8000"
 fi
+
+if [[ -z "$BACKEND2" ]]; then
+  export BACKEND2="backend2:8000"
+fi
+
+if [[ -z "$BACKEND3" ]]; then
+  export BACKEND3="backend3:8000"
+fi
+
+if [[ -z "$BACKEND4" ]]; then
+  export BACKEND4="backend4:8000"
+fi
+
 
 if [[ -z "$SOCKETIO" ]]; then
   echo "SOCKETIO defaulting to 0.0.0.0:9000"
@@ -61,7 +73,10 @@ fi
 
 # Generate nginx config with all required variables
 # shellcheck disable=SC2016
-envsubst '${BACKEND}
+envsubst '${BACKEND1}
+  ${BACKEND2}
+  ${BACKEND3}
+  ${BACKEND4}
   ${SOCKETIO}
   ${UPSTREAM_REAL_IP_ADDRESS}
   ${UPSTREAM_REAL_IP_HEADER}
@@ -72,5 +87,3 @@ envsubst '${BACKEND}
   ${FRONTEND_ID}' \
   </templates/nginx/frappe.conf.template >/etc/nginx/conf.d/frappe.conf
 
-echo "Starting nginx with Frontend ID: $FRONTEND_ID"
-nginx -g 'daemon off;'
