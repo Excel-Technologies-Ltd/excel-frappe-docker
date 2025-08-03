@@ -1,6 +1,14 @@
 #!/bin/bash
 
 # Set variables that do not exist
+if [[ -z "$FRONTEND_ID" ]]; then
+  echo "FRONTEND_ID defaulting to unknown-frontend"
+  export FRONTEND_ID=unknown-frontend
+fi
+if [[ -z "$REQUEST_ID" ]]; then
+  echo "REQUEST_ID defaulting to req-$(uuidgen)"
+  export REQUEST_ID="req-$(uuidgen)"
+fi
 if [[ -z "$BACKEND" ]]; then
   echo "BACKEND defaulting to 0.0.0.0:8000"
   export BACKEND=0.0.0.0:8000
