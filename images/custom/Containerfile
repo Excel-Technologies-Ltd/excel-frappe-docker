@@ -125,7 +125,7 @@ ARG FRAPPE_PATH=https://github.com/frappe/frappe
 ENV SETUPTOOLS_USE_DISTUTILS=stdlib
 ENV PIP_USE_PEP517=false
 ENV PIP_DEFAULT_TIMEOUT=100
-ENV NODE_OPTIONS="--max_old_space_size=4096"
+# ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 RUN export APP_INSTALL_ARGS="" && \
   if [ -n "${APPS_JSON_BASE64}" ]; then \
