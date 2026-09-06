@@ -50,6 +50,10 @@ RUN useradd -ms /bin/bash frappe \
     && nvm use v${NODE_VERSION} \
     && npm install -g yarn \
     && nvm alias default v${NODE_VERSION} \
+    # Create system-wide symlinks for node, npm, and yarn
+    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/node /usr/local/bin/node \
+    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/npm /usr/local/bin/npm \
+    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/yarn /usr/local/bin/yarn \
     && rm -rf ${NVM_DIR}/.cache \
     && echo 'export NVM_DIR="/home/frappe/.nvm"' >>/home/frappe/.bashrc \
     && echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >>/home/frappe/.bashrc \
@@ -122,11 +126,9 @@ USER frappe
 ARG FRAPPE_BRANCH=version-15
 ARG FRAPPE_PATH=https://github.com/frappe/frappe
 
-# ADD THESE LINES TO FIX THE BUILD ISSUE
 ENV SETUPTOOLS_USE_DISTUTILS=stdlib
 ENV PIP_USE_PEP517=false
 ENV PIP_DEFAULT_TIMEOUT=100
-# ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 RUN export APP_INSTALL_ARGS="" && \
   if [ -n "${APPS_JSON_BASE64}" ]; then \
