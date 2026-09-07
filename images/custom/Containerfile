@@ -9,6 +9,7 @@ ARG WKHTMLTOPDF_VERSION=0.12.6.1-3
 ARG WKHTMLTOPDF_DISTRO=bookworm
 ARG NODE_VERSION=20.19.2
 ENV NVM_DIR=/home/frappe/.nvm
+# We leave this PATH generic in case an exact version is passed, but the symlinks below do the real work.
 ENV PATH=${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/:${PATH}
 
 RUN useradd -ms /bin/bash frappe \
@@ -47,13 +48,13 @@ RUN useradd -ms /bin/bash frappe \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash \
     && . ${NVM_DIR}/nvm.sh \
     && nvm install ${NODE_VERSION} \
-    && nvm use v${NODE_VERSION} \
+    && nvm use ${NODE_VERSION} \
     && npm install -g yarn \
-    && nvm alias default v${NODE_VERSION} \
-    # Create system-wide symlinks for node, npm, and yarn
-    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/node /usr/local/bin/node \
-    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/npm /usr/local/bin/npm \
-    && ln -s ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin/yarn /usr/local/bin/yarn \
+    && nvm alias default ${NODE_VERSION} \
+    # Dynamically find the exact path NVM installed to (e.g. v22.14.0 instead of just v22)
+    && ln -s $(which node) /usr/local/bin/node \
+    && ln -s $(which npm) /usr/local/bin/npm \
+    && ln -s $(which yarn) /usr/local/bin/yarn \
     && rm -rf ${NVM_DIR}/.cache \
     && echo 'export NVM_DIR="/home/frappe/.nvm"' >>/home/frappe/.bashrc \
     && echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >>/home/frappe/.bashrc \
