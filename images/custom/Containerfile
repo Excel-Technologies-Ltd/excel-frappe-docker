@@ -1,4 +1,4 @@
-ARG BASE_REGISTRY=registry.aninda.me
+ARG BASE_REGISTRY=registry.aninda.me/dockerhub/library
 ARG PYTHON_VERSION=3.11.6
 ARG DEBIAN_BASE=bookworm
 FROM ${BASE_REGISTRY}/python:${PYTHON_VERSION}-slim-${DEBIAN_BASE} AS base
